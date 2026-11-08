@@ -7,6 +7,5 @@ def main(config: DictConfig):
     config_data = config.data
     print(f"Data path: ", config_data.path) 
 
-
 if __name__ == "__main__":
     main()

@@ -2,6 +2,6 @@ defaults:
   - _self_
   - override hydra/job_logging: disabled
   - override hydra/hydra_logging: disabled
-  
+
 data:
-  path: "low-cost-motor-imagery-decoding-for-rehab"
+  path: "../bci-kaggle/low-cost-motor-imagery-decoding-for-rehab/Training set"
