@@ -1,7 +1,15 @@
 defaults:
+  - preprocessing: preprocessing
+  - filtering: filtering
+  - feature_extraction: feature_extraction
   - _self_
   - override hydra/job_logging: disabled
   - override hydra/hydra_logging: disabled
 
 data:
   path: "../bci-kaggle/low-cost-motor-imagery-decoding-for-rehab/Training set"
+  sampling_rate: 250
+
+window:
+  tmin: 0.5
+  tmax: 4.5
