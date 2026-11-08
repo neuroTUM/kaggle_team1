@@ -5,11 +5,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 
 class TangentSpaceFeatures(TransformerMixin, BaseEstimator):
-    """Covariance per band mapped to the tangent space: (trials, bands, channels, times) -> (trials, features)
-
-    Each band gets its own reference point, the Riemannian mean of the training covariances of that band.
-    With 8 channels every band gives 8 * 9 / 2 = 36 features.
-    """
+    """features per frequency band with riemannian tangent spaces"""
 
     def __init__(self, estimator="oas", metric="riemann"):
         self.estimator = estimator
