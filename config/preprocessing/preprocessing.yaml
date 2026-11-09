@@ -1,0 +1,6 @@
+_target_: data.preprocessing.Preprocessing
+sampling_rate: ${data.sampling_rate}
+subtract_mean: true
+notch_freq: 50
+low: 1
+high: 80

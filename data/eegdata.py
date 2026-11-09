@@ -7,11 +7,12 @@ import mne
 
 
 class EEGData:
-    def __init__(self, folder_path: str):
+    def __init__(self, folder_path: str, sampling_rate: float):
         """
         Load all files of a folder as a list of MNE raw array and labels
         """
         self.folder_path = Path(folder_path)
+        self.sampling_rate = sampling_rate
         self.raw_data_list, self.labels_list = self._load_files(self.folder_path)
 
     def _load_files(self, folder: Path) -> Tuple[List, List]:
@@ -23,9 +24,7 @@ class EEGData:
 
             ch_names = list(df.columns[:-1]) # remove last channel
             ch_types = ['misc'] + ['eeg'] * (data.shape[0] - 2)
-            sfreq = 250 # Sampling frequency
-
-            info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=sfreq)
+            info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=self.sampling_rate)
 
             raw = mne.io.RawArray(data[:-1], info)
             labels = data[-1]

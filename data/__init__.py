@@ -1,1 +1,1 @@
-from eegdata import EEGData
+from data.eegdata import EEGData

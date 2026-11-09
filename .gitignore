@@ -1,6 +1,32 @@
-outputs
+# Hydra run folders
+outputs/
+multirun/
 
 # Virtual environment
-.venv
+.venv/
 
-__pycache__
+# Python caches and build files
+__pycache__/
+*.py[oc]
+*.egg-info/
+build/
+dist/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Competition data (the rules forbid redistributing it) and generated submissions
+low-cost-motor-imagery-decoding-for-rehab/
+bci-kaggle/
+datasets/
+submissions/
+*.csv
+*.zip
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

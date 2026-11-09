@@ -1,0 +1,3 @@
+_target_: filtering.filter_bank.FilterBank
+sampling_rate: ${data.sampling_rate}
+bands: [[1, 4], [4, 8], [8, 13], [13, 20], [20, 30]]
