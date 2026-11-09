@@ -21,7 +21,7 @@ class TangentSpaceFeatures(TransformerMixin, BaseEstimator):
         return self
 
     def transform(self, X):
-        check_is_fitted(self)  # clear error if transform is called before fit
+        check_is_fitted(self)
         features = []
         for band, tangent_space in enumerate(self.tangent_spaces_):
             covariances = self.covariances_.transform(X[:, band])

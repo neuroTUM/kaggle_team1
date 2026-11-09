@@ -7,7 +7,7 @@ from data import EEGData
 
 
 def cut_trials(signal, markers, cue_names, tmin, tmax, fs):
-    """Cut one trial per cue, from cue + tmin to cue + tmax seconds: (trials, bands, channels, times)"""
+    """Cut one trial per cue, from cue + tmin to cue + tmax seconds"""
     onsets = np.flatnonzero(np.isin(markers, cue_names))
     start = round(tmin * fs)
     length = round((tmax - tmin) * fs)
