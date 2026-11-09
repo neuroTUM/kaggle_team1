@@ -18,8 +18,8 @@ def cut_trials(signal, markers, cue_names, tmin, tmax, fs):
 @hydra.main(version_base=None, config_path='config', config_name='config')
 def main(config: DictConfig):
     # Hydra runs inside outputs/<date>/<time>, so the data path is made absolute first
-    eeg_data = EEGData(to_absolute_path(config.data.path))
     fs = config.data.sampling_rate
+    eeg_data = EEGData(to_absolute_path(config.data.path), fs)
 
     # instantiate() builds the class named by _target_ in each config file
     preprocessing = instantiate(config.preprocessing)

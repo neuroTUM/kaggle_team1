@@ -1,3 +1,3 @@
-_target_: feature_extraction.TangentSpaceFeatures
+_target_: feature_extraction.tangent_space.TangentSpaceFeatures
 estimator: oas
 metric: riemann
