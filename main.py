@@ -6,14 +6,6 @@ from omegaconf import DictConfig
 from data import EEGData
 
 
-def cut_trials(signal, markers, cue_names, tmin, tmax, fs):
-    """Cut one trial per cue, from cue + tmin to cue + tmax seconds"""
-    onsets = np.flatnonzero(np.isin(markers, cue_names))
-    start = round(tmin * fs)
-    length = round((tmax - tmin) * fs)
-    trials = [signal[..., onset + start : onset + start + length] for onset in onsets]
-    return np.stack(trials), markers[onsets]
-
 
 @hydra.main(version_base=None, config_path='config', config_name='config')
 def main(config: DictConfig):
@@ -31,7 +23,7 @@ def main(config: DictConfig):
     markers = np.array(eeg_data.labels_list[0], dtype=str)
 
     bands = filter_bank(preprocessing(signal))
-    trials, cues = cut_trials(bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs)
+    trials, cues = preprocessing.epoch_data(bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs)
     features = feature_extraction.fit_transform(trials)
 
 

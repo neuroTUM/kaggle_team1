@@ -1,11 +1,10 @@
+from .feature_extraction_class import FeatureExtractionClass
 import numpy as np
 from pyriemann.estimation import Covariances
 from pyriemann.tangentspace import TangentSpace
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.utils.validation import check_is_fitted
 
-
-class TangentSpaceFeatures(TransformerMixin, BaseEstimator):
+class TangentSpaceFeatures(FeatureExtractionClass):
     """features per frequency band with riemannian tangent spaces"""
 
     def __init__(self, estimator="oas", metric="riemann"):
