@@ -5,6 +5,8 @@ from typing import List, Tuple
 import pandas as pd
 import mne
 
+from tqdm import tqdm
+
 
 class EEGData:
     def __init__(self, folder_path: str, sampling_rate: float):
@@ -18,8 +20,8 @@ class EEGData:
     def _load_files(self, folder: Path) -> Tuple[List, List]:
         raw_data_list = []
         labels_list = []
-        for file in os.listdir(folder):
-            df = pd.read_csv(folder / file)
+        for file in tqdm(os.listdir(folder), desc="Loading files"):
+            df = pd.read_csv(folder / file, dtype={"Marker_val": str})
             data = df.transpose().to_numpy()
 
             ch_names = list(df.columns[:-1]) # remove last channel

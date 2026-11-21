@@ -1,7 +1,8 @@
+from typing import List
+
 import numpy as np
 from scipy.fft import rfft, rfftfreq
 from scipy.signal import butter, filtfilt, iirnotch, sosfiltfilt
-
 
 def subtract_mean(signal):
     """Remove each channel's mean over the whole recording"""
@@ -41,3 +42,19 @@ class Preprocessing:
         signal = notch(signal, self.fs, self.notch_freq)
         signal = bandpass(signal, self.fs, self.low, self.high)
         return signal
+
+    def epoch_data(
+        self, 
+        signal: np.ndarray, 
+        markers: np.ndarray,
+        cue_names: List[str],
+        tmin: float,
+        tmax: float,
+        fs: int,
+    ):
+        """Cut one trial per cue, from cue + tmin to cue + tmax seconds"""
+        onsets = np.flatnonzero(np.isin(markers, cue_names))
+        start = round(tmin * fs)
+        length = round((tmax - tmin) * fs)
+        trials = [signal[..., onset + start : onset + start + length] for onset in onsets]
+        return np.stack(trials), markers[onsets]
