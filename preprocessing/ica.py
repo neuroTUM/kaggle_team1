@@ -5,7 +5,14 @@ import mne
 
 
 class ICA:
-    def __init__(self, ica_components: float, channels: List[str], max_iter: int, random_state: int, method: str="picard"):
+    def __init__(
+        self,
+        ica_components: float,
+        channels: List[str],
+        max_iter: int,
+        random_state: int,
+        method: str = "picard",
+    ):
         self.ica_components = ica_components
         self.channels = channels
         self.method = method
@@ -19,11 +26,7 @@ class ICA:
 
     def __call__(self, X: mne.io.Raw):
         self.ica.fit(X)
-        eog_indices, _ = self.ica.find_bads_eog(
-            X, ch_name=self.channels
-        )
+        eog_indices, _ = self.ica.find_bads_eog(X, ch_name=self.channels)
         self.ica.exclude = eog_indices
-        
-        return self.ica.apply(X)
 
-    
+        return self.ica.apply(X)

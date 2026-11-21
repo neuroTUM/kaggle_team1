@@ -1,0 +1,2 @@
+_target_: preprocessing.ica.ICA
+ica_components: 0.99
