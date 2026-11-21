@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from sklearn.base import BaseEstimator, TransformerMixin
 
+
 class FeatureExtractionClass(ABC, TransformerMixin, BaseEstimator):
     @abstractmethod
     def fit(self, X, y):
@@ -9,4 +10,3 @@ class FeatureExtractionClass(ABC, TransformerMixin, BaseEstimator):
     @abstractmethod
     def transform(self, X):
         raise NotImplementedError()
-

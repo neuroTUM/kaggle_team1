@@ -1,6 +1,6 @@
 import numpy as np
 
-from data.preprocessing import bandpass
+from preprocessing.preprocessing import bandpass
 
 
 class FilterBank:

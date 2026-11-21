@@ -4,6 +4,7 @@ import numpy as np
 from scipy.fft import rfft, rfftfreq
 from scipy.signal import butter, filtfilt, iirnotch, sosfiltfilt
 
+
 def subtract_mean(signal):
     """Remove each channel's mean over the whole recording"""
     return signal - signal.mean(axis=-1, keepdims=True)
@@ -28,8 +29,9 @@ def spectrum(signal, fs):
 
 
 class Preprocessing:
-
-    def __init__(self, sampling_rate, notch_freq=50.0, low=1.0, high=80.0, subtract_mean=True):
+    def __init__(
+        self, sampling_rate, notch_freq=50.0, low=1.0, high=80.0, subtract_mean=True
+    ):
         self.fs = sampling_rate
         self.notch_freq = notch_freq
         self.low = low
@@ -44,8 +46,8 @@ class Preprocessing:
         return signal
 
     def epoch_data(
-        self, 
-        signal: np.ndarray, 
+        self,
+        signal: np.ndarray,
         markers: np.ndarray,
         cue_names: List[str],
         tmin: float,
@@ -56,5 +58,7 @@ class Preprocessing:
         onsets = np.flatnonzero(np.isin(markers, cue_names))
         start = round(tmin * fs)
         length = round((tmax - tmin) * fs)
-        trials = [signal[..., onset + start : onset + start + length] for onset in onsets]
+        trials = [
+            signal[..., onset + start : onset + start + length] for onset in onsets
+        ]
         return np.stack(trials), markers[onsets]
