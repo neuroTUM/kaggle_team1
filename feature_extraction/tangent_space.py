@@ -1,8 +1,10 @@
-from .feature_extraction_class import FeatureExtractionClass
 import numpy as np
 from pyriemann.estimation import Covariances
 from pyriemann.tangentspace import TangentSpace
 from sklearn.utils.validation import check_is_fitted
+
+from .feature_extraction_class import FeatureExtractionClass
+
 
 class TangentSpaceFeatures(FeatureExtractionClass):
     """features per frequency band with riemannian tangent spaces"""
@@ -16,7 +18,9 @@ class TangentSpaceFeatures(FeatureExtractionClass):
         self.tangent_spaces_ = []
         for band in range(X.shape[1]):
             covariances = self.covariances_.transform(X[:, band])
-            self.tangent_spaces_.append(TangentSpace(metric=self.metric).fit(covariances))
+            self.tangent_spaces_.append(
+                TangentSpace(metric=self.metric).fit(covariances)
+            )
         return self
 
     def transform(self, X):

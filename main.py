@@ -6,8 +6,7 @@ from omegaconf import DictConfig
 from data import EEGData
 
 
-
-@hydra.main(version_base=None, config_path='config', config_name='config')
+@hydra.main(version_base=None, config_path="config", config_name="config")
 def main(config: DictConfig):
     # Hydra runs inside outputs/<date>/<time>, so the data path is made absolute first
     fs = config.data.sampling_rate
@@ -23,8 +22,10 @@ def main(config: DictConfig):
     markers = np.array(eeg_data.labels_list[0], dtype=str)
 
     bands = filter_bank(preprocessing(signal))
-    trials, cues = preprocessing.epoch_data(bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs)
-    features = feature_extraction.fit_transform(trials)
+    trials, _ = preprocessing.epoch_data(
+        bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs
+    )
+    _ = feature_extraction.fit_transform(trials)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,8 @@
 import os
 from pathlib import Path
-from typing import List, Tuple
 
-import pandas as pd
 import mne
-
+import pandas as pd
 from tqdm import tqdm
 
 
@@ -17,16 +15,18 @@ class EEGData:
         self.sampling_rate = sampling_rate
         self.raw_data_list, self.labels_list = self._load_files(self.folder_path)
 
-    def _load_files(self, folder: Path) -> Tuple[List, List]:
+    def _load_files(self, folder: Path) -> tuple[list, list]:
         raw_data_list = []
         labels_list = []
         for file in tqdm(os.listdir(folder), desc="Loading files"):
             df = pd.read_csv(folder / file, dtype={"Marker_val": str})
             data = df.transpose().to_numpy()
 
-            ch_names = list(df.columns[:-1]) # remove last channel
-            ch_types = ['misc'] + ['eeg'] * (data.shape[0] - 2)
-            info = mne.create_info(ch_names=ch_names, ch_types=ch_types, sfreq=self.sampling_rate)
+            ch_names = list(df.columns[:-1])  # remove last channel
+            ch_types = ["misc"] + ["eeg"] * (data.shape[0] - 2)
+            info = mne.create_info(
+                ch_names=ch_names, ch_types=ch_types, sfreq=self.sampling_rate
+            )
 
             raw = mne.io.RawArray(data[:-1], info)
             labels = data[-1]
@@ -35,4 +35,3 @@ class EEGData:
             labels_list.append(labels)
 
         return raw_data_list, labels_list
-            
