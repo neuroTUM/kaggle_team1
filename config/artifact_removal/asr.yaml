@@ -1,4 +1,4 @@
-_target_: asr.ASR
+_target_: preprocessing.asr.ASR
 sampling_rate: ${data.sampling_rate}
 cutoff: 20
 window_length: 0.5
