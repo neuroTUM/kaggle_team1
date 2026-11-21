@@ -1,5 +1,3 @@
-from typing import List
-
 import numpy as np
 from scipy.fft import rfft, rfftfreq
 from scipy.signal import butter, filtfilt, iirnotch, sosfiltfilt
@@ -49,7 +47,7 @@ class Preprocessing:
         self,
         signal: np.ndarray,
         markers: np.ndarray,
-        cue_names: List[str],
+        cue_names: list[str],
         tmin: float,
         tmax: float,
         fs: int,

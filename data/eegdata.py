@@ -1,10 +1,8 @@
 import os
 from pathlib import Path
-from typing import List, Tuple
 
-import pandas as pd
 import mne
-
+import pandas as pd
 from tqdm import tqdm
 
 
@@ -17,7 +15,7 @@ class EEGData:
         self.sampling_rate = sampling_rate
         self.raw_data_list, self.labels_list = self._load_files(self.folder_path)
 
-    def _load_files(self, folder: Path) -> Tuple[List, List]:
+    def _load_files(self, folder: Path) -> tuple[list, list]:
         raw_data_list = []
         labels_list = []
         for file in tqdm(os.listdir(folder), desc="Loading files"):
