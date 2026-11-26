@@ -1,0 +1,21 @@
+# Deep-learning pipeline (main_dl.py). Only the filtering allowed for DL entries:
+# mean removal, 50 Hz notch and a 1-100 Hz band-pass. No ASR, ICA or filter bank.
+defaults:
+  - preprocessing: preprocessing
+  - model: eegnet
+  - training: training
+  - _self_
+  - override hydra/job_logging: disabled
+  - override hydra/hydra_logging: disabled
+
+preprocessing:
+  high: 100
+
+data:
+  path: "../bci-kaggle/low-cost-motor-imagery-decoding-for-rehab/Training set"
+  test_path: "../bci-kaggle/low-cost-motor-imagery-decoding-for-rehab/Single subject test set"
+  sampling_rate: 250
+
+window:
+  tmin: 0.5
+  tmax: 4.5
