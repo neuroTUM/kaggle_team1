@@ -14,12 +14,14 @@ def main(config: DictConfig):
 
     # instantiate() builds the class named by _target_ in each config file
     preprocessing = instantiate(config.preprocessing)
-    artifact_removal = instantiate(config.artifact_removal) #asr
+    artifact_removal = instantiate(config.artifact_removal)  # asr
+    ica = instantiate(config.ica, _convert_="all")
     filter_bank = instantiate(config.filtering)
     feature_extraction = instantiate(config.feature_extraction)
 
     raw = eeg_data.raw_data_list[0]
     signal = raw.get_data(picks="eeg")  # (channels, samples), without the time column
+
     markers = np.array(eeg_data.labels_list[0], dtype=str)
 
     # 1. Filtering: mean removal, notch and band-pass on the raw signal
@@ -27,16 +29,17 @@ def main(config: DictConfig):
 
     # 2. ASR: detect and reconstruct noisy components of the filtered broadband signal
     cleaned = artifact_removal(filtered)
-    
+
+    # Apply ICA
+    cleaned = ica(raw, cleaned)
+
     # 3. Other preprocessing: split into frequency bands, then epoch around the cues
     bands = filter_bank(cleaned)
-    trials, cues = cut_trials(bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs)
-
-    # 4. Feature extraction
-    bands = filter_bank(preprocessing(signal))
     trials, _ = preprocessing.epoch_data(
         bands, markers, ["move", "rest"], config.window.tmin, config.window.tmax, fs
     )
+
+    # 4. Feature extraction
     _ = feature_extraction.fit_transform(trials)
 
     # 5. Machine learning model: not implemented yet (models/ is empty)

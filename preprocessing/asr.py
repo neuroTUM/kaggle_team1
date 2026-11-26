@@ -8,7 +8,7 @@ class ASR:
     """Artifact Subspace Reconstruction (asrpy) for a filtered signal (channels, samples)
 
     -> Calibration: find the clean windows of the recording and estimate a rejection threshold
-    per principal component. 
+    per principal component.
     -> Processing: in each sliding window, components whose variance
     exceeds the threshold are removed and reconstructed from the remaining clean components.
     """
@@ -25,7 +25,9 @@ class ASR:
         max_dims=0.66,
     ):
         self.fs = sampling_rate
-        self.cutoff = cutoff  # in standard deviations; lower is more aggressive (typical 10-30)
+        self.cutoff = (
+            cutoff  # in standard deviations; lower is more aggressive (typical 10-30)
+        )
         self.window_length = window_length  # in seconds
         self.window_overlap = window_overlap
         self.max_bad_channels = max_bad_channels  # fraction of bad channels allowed in a clean calibration window
@@ -55,7 +57,10 @@ class ASR:
         if not hasattr(self, "asr_"):
             raise RuntimeError("ASR must be fitted before transform")
         cleaned = self.asr_.transform(
-            self._to_raw(signal), lookahead=self.lookahead, stepsize=self.step_size, maxdims=self.max_dims
+            self._to_raw(signal),
+            lookahead=self.lookahead,
+            stepsize=self.step_size,
+            maxdims=self.max_dims,
         )
         return cleaned.get_data()
 

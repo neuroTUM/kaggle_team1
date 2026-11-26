@@ -1,6 +1,7 @@
 defaults:
   - preprocessing: preprocessing
   - artifact_removal: asr
+  - ica: ica
   - filtering: filtering
   - feature_extraction: feature_extraction
   - _self_
