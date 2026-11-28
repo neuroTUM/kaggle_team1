@@ -1,6 +1,6 @@
 # @package _global_
-defaults:
-  - override /feature_extraction: slow_potential
+feature_extraction:
+  use: slow_potential
 
 preprocessing:
   preprocessing:
