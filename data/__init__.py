@@ -1,1 +1,1 @@
-from data.eegdata import EEGData
+from data.eegdata import EEGData  # noqa: F401
