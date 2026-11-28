@@ -13,10 +13,11 @@ def main(config: DictConfig):
     eeg_data = EEGData(to_absolute_path(config.data.path), fs)
 
     # instantiate() builds the class named by _target_ in each config file
-    preprocessing = instantiate(config.preprocessing)
-    artifact_removal = instantiate(config.artifact_removal)  # asr
-    ica = instantiate(config.ica, _convert_="all")
-    filter_bank = instantiate(config.filtering)
+    preprocessing_config = config.preprocessing
+    preprocessing = instantiate(preprocessing_config.preprocessing)
+    artifact_removal = instantiate(preprocessing_config.artifact_removal)  # asr
+    ica = instantiate(preprocessing_config.ica, _convert_="all")
+    filter_bank = instantiate(preprocessing_config.filtering)
     feature_extraction = instantiate(config.feature_extraction)
 
     raw = eeg_data.raw_data_list[0]
