@@ -12,3 +12,8 @@ to install all necessary packages.
 ```sh
 uv run python main.py +experiment=slow_potential
 ```
+
+## Time domain parameters
+```sh
+uv run python main.py feature_extraction.use=time_domain_parameters
+```

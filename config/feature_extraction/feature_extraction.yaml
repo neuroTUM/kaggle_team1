@@ -13,3 +13,17 @@ slow_potential:
   start: 0.5
   window_length: 0.2
   channels: [0, 1, 2, 3, 5] # Fz, C3, Cz, C4, Pz
+
+time_domain_parameters:
+  _target_: feature_extraction.time_domain_parameters.TimeDomainParameters
+  order: 1
+  # 4 nearest neighbours of Fz, C3, Cz, C4, PO7, Pz, PO8, Oz
+  neighbours:
+    - [2, 1, 3, 5]
+    - [2, 0, 5, 4]
+    - [5, 1, 0, 3]
+    - [2, 0, 5, 6]
+    - [7, 5, 1, 6]
+    - [2, 7, 1, 4]
+    - [7, 5, 3, 4]
+    - [4, 6, 5, 1]
