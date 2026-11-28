@@ -13,9 +13,13 @@ class EEGData:
         """
         self.folder_path = Path(folder_path)
         self.sampling_rate = sampling_rate
-        self.raw_data_list, self.labels_list = self._load_files(self.folder_path)
+        self.subject_list, self.session_list, self.raw_data_list, self.labels_list = (
+            self._load_files(self.folder_path)
+        )
 
-    def _load_files(self, folder: Path) -> tuple[list, list]:
+    def _load_files(self, folder: Path) -> tuple[list, list, list, list]:
+        subject_list = []
+        session_list = []
         raw_data_list = []
         labels_list = []
         for file in tqdm(os.listdir(folder), desc="Loading files"):
@@ -28,10 +32,14 @@ class EEGData:
                 ch_names=ch_names, ch_types=ch_types, sfreq=self.sampling_rate
             )
 
+            subject = file[:4]
+            session = int(file[5:8])
             raw = mne.io.RawArray(data[:-1], info)
             labels = data[-1]
 
+            subject_list.append(subject)
             raw_data_list.append(raw)
             labels_list.append(labels)
+            session_list.append(session)
 
-        return raw_data_list, labels_list
+        return subject_list, session_list, raw_data_list, labels_list
