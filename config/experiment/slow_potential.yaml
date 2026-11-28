@@ -3,10 +3,10 @@ defaults:
   - override /feature_extraction: slow_potential
 
 preprocessing:
-  low: 0.1
-
-filtering:
-  bands: [[0.1, 2]]
+  preprocessing:
+    low: 0.1
+  filtering:
+    bands: [[0.1, 2]]
 
 window:
   tmin: -0.5

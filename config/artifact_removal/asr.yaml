@@ -1,9 +1,0 @@
-_target_: asr.ASR
-sampling_rate: ${data.sampling_rate}
-cutoff: 20
-window_length: 0.5
-window_overlap: 0.66
-max_bad_channels: 0.1
-step_size: 32
-lookahead: 0.25
-max_dims: 0.66

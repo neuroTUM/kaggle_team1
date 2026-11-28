@@ -1,6 +1,32 @@
-_target_: data.preprocessing.Preprocessing
-sampling_rate: ${data.sampling_rate}
-subtract_mean: true
-notch_freq: 50
-low: 1
-high: 80
+preprocessing:
+  _target_: preprocessing.preprocessing.Preprocessing
+  sampling_rate: ${data.sampling_rate}
+  subtract_mean: true
+  notch_freq: 50
+  low: 1
+  high: 80
+
+artifact_removal:
+  _target_: preprocessing.asr.ASR
+  sampling_rate: ${data.sampling_rate}
+  cutoff: 20
+  window_length: 0.5
+  window_overlap: 0.66
+  max_bad_channels: 0.1
+  step_size: 32
+  lookahead: 0.25
+  max_dims: 0.66
+
+ica:
+  _target_: preprocessing.ica.ICA
+  ica_components: 8
+  ica_measure: "zscore"
+  channels: ["Fz"]
+  max_iter: 250
+  random_state: 99
+  method: "infomax"
+
+filtering:
+  _target_: preprocessing.filter_bank.FilterBank
+  sampling_rate: ${data.sampling_rate}
+  bands: [[1, 4], [4, 8], [8, 13], [13, 20], [20, 30]]
