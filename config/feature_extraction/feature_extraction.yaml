@@ -13,3 +13,7 @@ slow_potential:
   start: 0.5
   window_length: 0.2
   channels: [0, 1, 2, 3, 5] # Fz, C3, Cz, C4, Pz
+
+time_domain_parameters:
+  _target_: feature_extraction.time_domain_parameters.TimeDomainParameters
+  order: 1
