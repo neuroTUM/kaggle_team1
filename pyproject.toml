@@ -20,3 +20,15 @@ dependencies = [
     "torch>=2.15.0",
     "tqdm>=4.70.1",
 ]
+
+# CUDA build of PyTorch on Windows/Linux (PyPI only ships CPU wheels for Windows).
+# macOS keeps the default PyPI wheel. CUDA wheels also run on machines without a GPU.
+[tool.uv.sources]
+torch = [
+    { index = "pytorch-cu134", marker = "sys_platform == 'win32' or sys_platform == 'linux'" },
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu134"
+url = "https://download.pytorch.org/whl/cu134"
+explicit = true
