@@ -113,7 +113,7 @@ def main(config: DictConfig):
         torch.backends.cudnn.benchmark = False
     else:
         print("Using CPU")
-    preprocessing = instantiate(config.preprocessing)
+    preprocessing = instantiate(config.preprocessing.preprocessing)
     out_dir = Path(HydraConfig.get().runtime.output_dir)
 
     train_files = defaultdict(list)

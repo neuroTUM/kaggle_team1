@@ -9,7 +9,8 @@ defaults:
   - override hydra/hydra_logging: disabled
 
 preprocessing:
-  high: 100
+  preprocessing:
+    high: 100
 
 data:
   path: "../bci-kaggle/low-cost-motor-imagery-decoding-for-rehab/Training set"

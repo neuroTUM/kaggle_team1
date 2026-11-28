@@ -1,0 +1,18 @@
+# @package _global_
+# Grid search for the DL pipeline (scripts/grid_search_dl.py).
+# Inherits everything from config_dl.yaml; only the search space is added here.
+# Every combination of the values below is cross-validated on every subject.
+defaults:
+  - /config_dl
+  - _self_
+
+# Keys are dotted config paths, values are the lists to try.
+# window.tmin / window.tmax are allowed too (the data is re-epoched per window).
+search:
+  training.lr: [3e-4, 1e-3, 3e-3]
+  model.dropout: [0.25, 0.5]
+  model.kernel_length: [32, 64, 125]
+
+# null = the subjects that have a test file (same set as main_dl.py).
+# Use e.g. [S001, S002, S009] for a quick coarse search.
+subjects: null
