@@ -1,7 +1,0 @@
-_target_: preprocessing.ica.ICA
-ica_components: 8
-ica_measure: "zscore"
-channels: ["Fz"]
-max_iter: 250
-random_state: 99
-method: "infomax"
