@@ -51,21 +51,40 @@ def zscore(trials: np.ndarray) -> np.ndarray:
     return (trials - mean) / std
 
 
-def to_tensor(trials: np.ndarray) -> torch.Tensor:
-    return torch.tensor(trials, dtype=torch.float32).unsqueeze(1)  # (n, 1, ch, t)
+def to_tensor(trials: np.ndarray, device: torch.device) -> torch.Tensor:
+    x = torch.tensor(trials, dtype=torch.float32).unsqueeze(1)  # (n, 1, ch, t)
+    return x.to(device)
 
 
-def train(config, X: np.ndarray, y: np.ndarray, seed: int) -> nn.Module:
-    torch.manual_seed(seed)
+def get_device(name: str) -> torch.device:
+    """'auto' picks the GPU when one is available, otherwise the CPU"""
+    if name == "auto":
+        name = "cuda" if torch.cuda.is_available() else "cpu"
+    if name.startswith("cuda") and not torch.cuda.is_available():
+        raise RuntimeError(
+            f"device={name!r} requested but CUDA is not available "
+            f"(torch {torch.__version__}). Install the CUDA build of torch."
+        )
+    return torch.device(name)
+
+
+def train(
+    config, X: np.ndarray, y: np.ndarray, seed: int, device: torch.device
+) -> nn.Module:
+    torch.manual_seed(seed)  # also seeds the GPU
     model = instantiate(config.model, n_channels=X.shape[1], n_samples=X.shape[2])
+    model = model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.training.lr)
     loss_fn = nn.CrossEntropyLoss()
-    X_t, y_t = to_tensor(X), torch.tensor(y, dtype=torch.long)
+    # The whole subject fits in GPU memory (~4 MB), so copy it once up front
+    X_t = to_tensor(X, device)
+    y_t = torch.tensor(y, dtype=torch.long, device=device)
     generator = torch.Generator().manual_seed(seed)
 
     model.train()
     for _ in range(config.training.epochs):
-        order = torch.randperm(len(X_t), generator=generator)
+        # Shuffle on the CPU generator so the order is the same on every device
+        order = torch.randperm(len(X_t), generator=generator).to(device)
         for i in range(0, len(order), config.training.batch_size):
             batch = order[i : i + config.training.batch_size]
             if len(batch) < 2:  # BatchNorm needs more than one sample
@@ -77,15 +96,23 @@ def train(config, X: np.ndarray, y: np.ndarray, seed: int) -> nn.Module:
 
 
 @torch.no_grad()
-def predict(model: nn.Module, X: np.ndarray) -> np.ndarray:
+def predict(model: nn.Module, X: np.ndarray, device: torch.device) -> np.ndarray:
     model.eval()
-    return model(to_tensor(X)).argmax(dim=1).numpy()
+    return model(to_tensor(X, device)).argmax(dim=1).cpu().numpy()
 
 
 @hydra.main(version_base=None, config_path="config", config_name="config_dl")
 def main(config: DictConfig):
     fs = config.data.sampling_rate
     seed = config.training.seed
+    device = get_device(config.training.device)
+    if device.type == "cuda":
+        print(f"Using GPU: {torch.cuda.get_device_name(device)}")
+        # Deterministic cuDNN kernels so runs with the same seed give the same result
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+    else:
+        print("Using CPU")
     preprocessing = instantiate(config.preprocessing)
     out_dir = Path(HydraConfig.get().runtime.output_dir)
 
@@ -134,8 +161,8 @@ def main(config: DictConfig):
         )
         fold_acc = []
         for k, (tr, va) in enumerate(folds.split(X, y)):
-            model = train(config, X[tr], y[tr], seed + k)
-            fold_acc.append(float((predict(model, X[va]) == y[va]).mean()))
+            model = train(config, X[tr], y[tr], seed + k, device)
+            fold_acc.append(float((predict(model, X[va], device) == y[va]).mean()))
         acc = float(np.mean(fold_acc))
         print(
             f"{subject}: {len(y)} train / {len(X_test)} test trials, CV acc {acc:.3f}"
@@ -143,9 +170,9 @@ def main(config: DictConfig):
         results.append({"subject": subject, "cv_accuracy": acc})
 
         # Final model on all training trials, then predict the test trials
-        model = train(config, X, y, seed)
+        model = train(config, X, y, seed, device)
         names = {v: k for k, v in LABELS.items()}
-        predictions += [names[p] for p in predict(model, X_test)]
+        predictions += [names[p] for p in predict(model, X_test, device)]
 
     results = pd.DataFrame(results)
     print(f"Mean CV accuracy: {results.cv_accuracy.mean():.3f}")
