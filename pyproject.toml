@@ -32,3 +32,8 @@ torch = [
 name = "pytorch-cu134"
 url = "https://download.pytorch.org/whl/cu134"
 explicit = true
+
+[dependency-groups]
+dev = [
+    "ty>=0.0.112",
+]

@@ -30,6 +30,8 @@ class ICA:
     def __call__(self, X: mne.io.Raw, cleaned: np.ndarray):
         eeg_picks = mne.pick_types(X.info, eeg=True)
         X = X.copy()
+
+        assert X._data is not None
         X._data[eeg_picks] = cleaned
 
         self.ica.fit(X)
