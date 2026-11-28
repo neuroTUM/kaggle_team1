@@ -1,0 +1,13 @@
+# @package _global_
+feature_extraction:
+  use: slow_potential
+
+preprocessing:
+  preprocessing:
+    low: 0.1
+  filtering:
+    bands: [[0.1, 2]]
+
+window:
+  tmin: -0.5
+  tmax: 2.5

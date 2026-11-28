@@ -18,7 +18,8 @@ def main(config: DictConfig):
     artifact_removal = instantiate(preprocessing_config.artifact_removal)  # asr
     ica = instantiate(preprocessing_config.ica, _convert_="all")
     filter_bank = instantiate(preprocessing_config.filtering)
-    feature_extraction = instantiate(config.feature_extraction)
+    feature_config = config.feature_extraction
+    feature_extraction = instantiate(feature_config[feature_config.use])
 
     raw = eeg_data.raw_data_list[0]
     signal = raw.get_data(picks="eeg")  # (channels, samples), without the time column
